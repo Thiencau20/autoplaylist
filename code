@@ -1,0 +1,125 @@
+// **********************************************************************
+//                            FUNCTION: DO GET (MAIN APP)
+// **********************************************************************
+
+// Deployed at:  https://script.google.com/macros/s/AKfycbyJLvV3FyTLJDCcCbHxnk6l8aeSHHKLV0S9m8XwphaY5UTDEzUa/exec
+// Or: bit.ly/16tgG97
+
+function doGet() {
+  var app = UiApp.createApplication(); 
+  var helloLabel = app.createLabel('Search for an Artist and/or Song and press ENTER.  It may take a few seconds to generate your Custom Playlist.'); 
+  var myLabel = app.createLabel().setId('myLabel');
+
+  var tBox = app.createTextBox().setName('tBox');
+  var tBoxHandler = app.createServerKeyHandler('enterKey');
+  tBoxHandler.addCallbackElement(myLabel);
+  tBox.addKeyUpHandler(tBoxHandler);
+ 
+  app.add(helloLabel);
+  app.add(tBox);
+  app.add(myLabel);
+ 
+  var search = app.createDialogBox();
+
+  var label = app.createLabel('Working....')
+                 .setId('statusLabel')
+                 .setVisible(false);
+  app.add(label);
+
+  var handler = app.createServerHandler('myClickHandler');
+  handler.addCallbackElement(label);
+
+  return app;
+}
+
+function myClickHandler(e) {
+  var app = UiApp.getActiveApplication();
+
+  var label = app.getElementById('statusLabel');
+  label.setVisible(true);
+
+  app.close();
+  return app;
+}
+
+function enterKey(e){
+  var app = UiApp.getActiveApplication();
+
+if (e.parameter.keyCode==13) {
+    app.getElementById('myLabel').setText('Generated custom playlist for your search: '+ e.parameter.tBox +". To generate more playlists, please refresh browser.");
+
+mySearch(e);
+
+}  // end "on.enter"
+
+return app;
+
+} // enter enterKey(e)
+
+function mySearch(e){
+
+  var app = UiApp.getActiveApplication();
+ 
+var input = e.parameter.tBox
+var searchTerm = input.replace(" ","+")
+var url ="http://www.youtube.com/results?search_query=" + searchTerm
+var html =  UrlFetchApp.fetch(url).getContentText();
+var tubeXml = Xml.parse(html, true)        
+
+var mainTitle = tubeXml.html.body.div[0].div[3].div.div[1].div[1].div[1].ol.li[0].div[1].h3.a.getText();
+var mainURL = tubeXml.html.body.div[0].div[3].div.div[1].div[1].div[1].ol.li[0].div[1].h3.a.getAttribute('href').getValue();
+
+var home = "www.youtube.com"
+
+var URL2 = home+mainURL
+
+var firstsong = mainURL.replace("/watch?v=","")
+var arrayX = [firstsong]
+
+var urlx = URL2
+var htmlx =  UrlFetchApp.fetch(urlx).getContentText();
+var tubexXml = Xml.parse(htmlx, true)
+
+      var seedCrystal = "http://www.youtube.com"
+      var seed = htmlx.match(/related-list-item">([^<>]+)<a href="(.*?)" class="related-playlist/) // custom regex
+          if(seed == null) {var youtubeURL = URL2}
+          else {var youtubeURL = seedCrystal.concat(seed[2])}
+
+var urly = youtubeURL
+var htmly =  UrlFetchApp.fetch(urly).getContentText();
+var tubeyXml = Xml.parse(htmly, true)
+
+      var seedCrystal = "http://www.youtube.com"
+
+var seedy = htmly.match(/data-video-id="(.*?)" /g) // custom regex
+var lengthy = htmly.match(/data-video-id="(.*?)" /g).length;
+
+if(seedy == null) {var playlistX = urly
+         
+          } else {
+         
+          for (var i = lengthy; i-- >0;) {
+             
+              seedy[i] = seedy[i].replace('data-video-id=','')
+              seedy[i] = seedy[i].replace(/"/g,'')
+              seedy[i] = seedy[i].replace(/ /g,'')
+              seedy[i] = seedy[i].replace(/<aclass=yt-uix-contextlinkspf-link,/g,'')
+              seedy[i] = seedy[i].replace(/>/g,'')             
+
+            arrayX.push(seedy[i]);
+           
+            var playlistX = arrayX.toString();
+
+} // end for
+
+} // end else
+
+var playr = "http://playr.me/?v="
+var playrURL = playr + playlistX
+
+   var anchor = app.createAnchor("Click to Play Custom Playlist", playrURL);
+   app.add(anchor);
+
+return app; 
+
+} 
