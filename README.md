@@ -11,5 +11,5 @@ Built on top of Youtube and Playr.me.
 
 http://bit.ly/16tgG97
 
-I wish it didn't require users to login to gmail, 
-but it's still pretty cool.
+Require users to login to gmail 
+since it's built inside Google's brain.
