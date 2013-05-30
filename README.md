@@ -13,3 +13,9 @@ http://bit.ly/16tgG97
 
 Require users to login to gmail 
 since it's built inside Google's brain.
+
+It works on Google Search principles, 
+so the more precise the search (i.e. Artist AND Song), 
+the more precise the playlist results. 
+
+Enjoy.
