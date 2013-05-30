@@ -11,7 +11,7 @@ Built on top of Youtube and Playr.me.
 
 http://bit.ly/16tgG97
 
-Require users to login to gmail 
+Requires users to login to gmail 
 since it's built inside Google's brain.
 
 It works on Google Search principles, 
